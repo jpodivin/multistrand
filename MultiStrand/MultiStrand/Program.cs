@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace MultiStrand
@@ -11,7 +10,7 @@ namespace MultiStrand
     {
         static void Main(string[] args)
         {
-            string phenotype = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, \n" +
+            string targetPhenotype = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, \n" +
                 "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\n" +
                 " Ut enim ad minim veniam, quis nostrud exercitation ullamco \n" +
                 "laboris nisi ut aliquip ex ea commodo consequat.\n" +
@@ -24,6 +23,7 @@ namespace MultiStrand
             double bestFitness = 0.0;
 
             Random random = new Random();
+            Stopwatch stopwatch = new Stopwatch();
             List<Genome> population = new List<Genome>();
 
             List<Tuple<double, Genome>> evaluatedPopulation = new List<Tuple<double, Genome>>();
@@ -32,9 +32,11 @@ namespace MultiStrand
 
             for (int i = 0; i < popSize; i++)
             {
-                population.Add(new Genome(phenotype.Length));
+                population.Add(new Genome(targetPhenotype.Length));
             }
-            
+
+            stopwatch.Start();
+
             while(bestFitness != 1)
             {
                 foreach (Genome genome in population)
@@ -43,7 +45,9 @@ namespace MultiStrand
                 }
                 foreach (Genome genome in population)
                 {
-                    taskList.Add(Task.Run(() => FitnessEvaluator.EvaluateGenome(phenotype, genome)));
+                    taskList.Add(
+                        Task.Run(
+                            () => FitnessEvaluator.EvaluateGenome(targetPhenotype, genome)));
                 }
                 for (int i = 0; i < popSize; i++)
                 {
@@ -75,7 +79,8 @@ namespace MultiStrand
                 {
                     if (random.NextDouble() <= 1.0)
                     {
-                        population.Add(evaluatedPopulation[(index + 1) % evaluatedPopulation.Count].Item2.Cross(
+                        population.Add(
+                            evaluatedPopulation[(index + 1) % evaluatedPopulation.Count].Item2.Cross(
                             evaluatedPopulation[index % evaluatedPopulation.Count].Item2));
                     }
                     else
@@ -85,6 +90,10 @@ namespace MultiStrand
                 }
 
             }
+
+            stopwatch.Stop();
+
+            Console.WriteLine("Time elapsed: {0:T}", stopwatch.Elapsed);
             
         }
     }
