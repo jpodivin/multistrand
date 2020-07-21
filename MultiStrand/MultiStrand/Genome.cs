@@ -21,7 +21,7 @@ namespace MultiStrand
 
             for (int i = 0; i < genomeLength; i++)
             {
-                genes += Convert.ToChar(random.Next(0, 127));
+                genes += Convert.ToChar(random.Next(8, 128));
             }
         }
 
@@ -39,9 +39,9 @@ namespace MultiStrand
                 if (random.NextDouble() <= mutationRate)
                 {
                     genes = genes.Substring(0, i)
-                        + Convert.ToChar(random.Next(0, 127))
+                        + Convert.ToChar(random.Next(8, 128))
                         + genes.Substring(i + 1);
-                                       
+                    break;
                 }
             }
 
