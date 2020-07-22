@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace MultiStrand
 {
@@ -17,7 +15,7 @@ namespace MultiStrand
                 }
             }
 
-            return new Tuple<double, Genome>(fitness/genome.GenomeLength, genome);
+            return new Tuple<double, Genome>(fitness / genome.GenomeLength, genome);
         }
 
     }

@@ -37,7 +37,7 @@ namespace MultiStrand
 
             stopwatch.Start();
 
-            while(bestFitness != 1)
+            while (bestFitness != 1)
             {
                 foreach (Genome genome in population)
                 {
@@ -55,7 +55,7 @@ namespace MultiStrand
                 }
 
                 evaluatedPopulation = evaluatedPopulation.OrderBy(genomeFitnessPair => genomeFitnessPair.Item1).Reverse().ToList();
-                
+
                 //Clear lists 
                 population.Clear();
                 taskList.Clear();
@@ -66,7 +66,7 @@ namespace MultiStrand
                 bestFitness = evaluatedPopulation.First().Item1;
 
                 Console.WriteLine("Best fitness: {0}\nText: {1} \n\n",
-                    bestFitness, 
+                    bestFitness,
                     evaluatedPopulation.First().Item2.Genes);
 
                 /*
@@ -75,7 +75,7 @@ namespace MultiStrand
                  */
                 population.Add(evaluatedPopulation[0].Item2);
 
-                for(int index = 0; index < popSize; index++)
+                for (int index = 0; index < popSize; index++)
                 {
                     if (random.NextDouble() <= 1.0)
                     {
@@ -86,7 +86,7 @@ namespace MultiStrand
                     else
                     {
                         population.Add(evaluatedPopulation[index % evaluatedPopulation.Count].Item2);
-                    }                    
+                    }
                 }
 
             }
@@ -94,7 +94,7 @@ namespace MultiStrand
             stopwatch.Stop();
 
             Console.WriteLine("Time elapsed: {0:T}", stopwatch.Elapsed);
-            
+
         }
     }
 
