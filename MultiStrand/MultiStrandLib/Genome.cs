@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace MultiStrand
+namespace MultiStrandLib
 {
-    class Genome
+    public class Genome
     {
         private string genes;
         private int genomeLength;
