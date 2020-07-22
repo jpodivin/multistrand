@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace MultiStrand
+namespace MultiStrandLib
 {
-    static class FitnessEvaluator
+    public static class FitnessEvaluator
     {
         public static Tuple<double, Genome> EvaluateGenome(string target, Genome genome)
         {
