@@ -11,17 +11,10 @@ namespace MultiStrand
     {
         static void Main(string[] args)
         {
-            string targetPhenotype = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, \n" +
-                "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\n" +
-                " Ut enim ad minim veniam, quis nostrud exercitation ullamco \n" +
-                "laboris nisi ut aliquip ex ea commodo consequat.\n" +
-                " Duis aute irure dolor in reprehenderit in voluptate \n" +
-                "velit esse cillum dolore eu fugiat nulla pariatur. \n" +
-                "Excepteur sint occaecat cupidatat non proident, \n" +
-                "sunt in culpa qui officia deserunt mollit anim id est laborum.";
-
-            int popSize = 1000;
+            string targetPhenotype;
+            int popSize;
             double bestFitness = 0.0;
+            double mutationRate;
 
             Random random = new Random();
             Stopwatch stopwatch = new Stopwatch();
@@ -30,6 +23,8 @@ namespace MultiStrand
             List<Tuple<double, Genome>> evaluatedPopulation = new List<Tuple<double, Genome>>();
 
             List<Task<Tuple<double, Genome>>> taskList = new List<Task<Tuple<double, Genome>>>();
+
+            (popSize, mutationRate, targetPhenotype) = MultiStrandCLISetup();
 
             for (int i = 0; i < popSize; i++)
             {
@@ -96,6 +91,40 @@ namespace MultiStrand
 
             Console.WriteLine("Time elapsed: {0:T}", stopwatch.Elapsed);
 
+        }
+
+        private static Tuple<int, double, string> MultiStrandCLISetup()
+        {
+            string input;
+            /*
+               Default values for population size and target phenotype. 
+               The population size and target phenotype should be chosen with respect to your systems resources.
+            */
+
+            int selectedPopsize = 1000;
+            double mutationRate = 0.01;
+            string selectedTargetPhenotype = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, \n" +
+                "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\n" +
+                " Ut enim ad minim veniam, quis nostrud exercitation ullamco \n" +
+                "laboris nisi ut aliquip ex ea commodo consequat.\n" +
+                " Duis aute irure dolor in reprehenderit in voluptate \n" +
+                "velit esse cillum dolore eu fugiat nulla pariatur. \n" +
+                "Excepteur sint occaecat cupidatat non proident, \n" +
+                "sunt in culpa qui officia deserunt mollit anim id est laborum.";
+
+            Console.Write("Enter desired population size (default 1000): ");
+            input = Console.ReadLine();
+            selectedPopsize = input == "" ? selectedPopsize : Convert.ToInt32(input);
+
+            Console.Write("Enter desired mutation rate (default 0.01): ");
+            input = Console.ReadLine();
+            mutationRate = input == "" ? mutationRate : Convert.ToDouble(input);
+
+            Console.Write("Enter target phenotype: ");
+            input = Console.ReadLine();
+            selectedTargetPhenotype = input == "" ? selectedTargetPhenotype : input;
+
+            return new Tuple<int, double, string>(selectedPopsize, mutationRate, selectedTargetPhenotype);
         }
     }
 
