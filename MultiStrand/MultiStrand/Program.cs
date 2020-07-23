@@ -13,6 +13,7 @@ namespace MultiStrand
         {
             string targetPhenotype;
             int popSize;
+            long totalGenerationsPassed = 0;
             double bestFitness = 0.0;
             double mutationRate;
             double crossoverRate;
@@ -29,7 +30,11 @@ namespace MultiStrand
 
             for (int i = 0; i < popSize; i++)
             {
-                population.Add(new Genome(targetPhenotype.Length));
+                /*
+                The initial population has random generators seeded with randomly generated numbers.
+                That way the states of generators won't be the same and mutations will be applied in more stochastic manner. 
+                 */
+                population.Add(new Genome(targetPhenotype.Length, random.Next()));
             }
 
             stopwatch.Start();
@@ -58,9 +63,13 @@ namespace MultiStrand
 
                 bestFitness = evaluatedPopulation.Last().Item1;
 
-                Console.WriteLine("Best fitness: {0}\nText: {1} \n\n",
-                    bestFitness,
-                    evaluatedPopulation.First().Item2.Genes);
+                //Print results every 10th generations or if the optimum fitness is met.
+                if (totalGenerationsPassed % 10 == 0 || bestFitness == 1.0) {
+                    Console.WriteLine("Generation: {2} \nBest fitness: {0} \nText: {1} \n\n",
+                        bestFitness,
+                        evaluatedPopulation.First().Item2.Genes,
+                        totalGenerationsPassed);
+                }                
 
                 for (int index = 0; index < popSize; index++)
                 {
@@ -82,12 +91,14 @@ namespace MultiStrand
                 }
 
                 population.Add(evaluatedPopulation[0].Item2);
+
+                totalGenerationsPassed++;
             }
 
             stopwatch.Stop();
 
             Console.WriteLine("Time elapsed: {0:T}", stopwatch.Elapsed);
-
+            Console.WriteLine("Over {0} generations.", totalGenerationsPassed);
         }
 
         private static Tuple<int, double, double, string> MultiStrandCLISetup()
