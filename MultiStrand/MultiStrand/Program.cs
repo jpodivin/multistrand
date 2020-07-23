@@ -47,16 +47,16 @@ namespace MultiStrand
                     evaluatedPopulation.Add(taskList[i].Result);
                 }
 
-                evaluatedPopulation = evaluatedPopulation.OrderBy(genomeFitnessPair => genomeFitnessPair.Item1).Reverse().ToList();
+                evaluatedPopulation = evaluatedPopulation.OrderBy(genomeFitnessPair => genomeFitnessPair.Item1).ToList();
 
                 //Clear lists 
                 population.Clear();
                 taskList.Clear();
 
                 //Keep only the 10 best individuals
-                evaluatedPopulation = evaluatedPopulation.Take(10).ToList();
+                evaluatedPopulation = evaluatedPopulation.TakeLast(10).ToList();
 
-                bestFitness = evaluatedPopulation.First().Item1;
+                bestFitness = evaluatedPopulation.Last().Item1;
 
                 Console.WriteLine("Best fitness: {0}\nText: {1} \n\n",
                     bestFitness,
