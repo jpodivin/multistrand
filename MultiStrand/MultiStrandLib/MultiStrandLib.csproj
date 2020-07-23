@@ -4,4 +4,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Genome.cs~RFad9fc1.TMP" />
+  </ItemGroup>
+
 </Project>

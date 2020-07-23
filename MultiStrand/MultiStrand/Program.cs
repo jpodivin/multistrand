@@ -15,6 +15,7 @@ namespace MultiStrand
             int popSize;
             double bestFitness = 0.0;
             double mutationRate;
+            double crossoverRate;
 
             Random random = new Random();
             Stopwatch stopwatch = new Stopwatch();
@@ -24,7 +25,7 @@ namespace MultiStrand
 
             List<Task<Tuple<double, Genome>>> taskList = new List<Task<Tuple<double, Genome>>>();
 
-            (popSize, mutationRate, targetPhenotype) = MultiStrandCLISetup();
+            (popSize, mutationRate, crossoverRate, targetPhenotype) = MultiStrandCLISetup();
 
             for (int i = 0; i < popSize; i++)
             {
@@ -34,11 +35,7 @@ namespace MultiStrand
             stopwatch.Start();
 
             while (bestFitness != 1)
-            {
-                foreach (Genome genome in population)
-                {
-                    genome.Mutate(0.01);
-                }
+            {              
                 foreach (Genome genome in population)
                 {
                     taskList.Add(
@@ -65,15 +62,9 @@ namespace MultiStrand
                     bestFitness,
                     evaluatedPopulation.First().Item2.Genes);
 
-                /*
-                 Copy top 10 individuals into next generation. 
-                Plus the best individual.
-                 */
-                population.Add(evaluatedPopulation[0].Item2);
-
                 for (int index = 0; index < popSize; index++)
                 {
-                    if (random.NextDouble() <= 1.0)
+                    if (random.NextDouble() <= crossoverRate)
                     {
                         population.Add(
                             evaluatedPopulation[(index + 1) % evaluatedPopulation.Count].Item2.Cross(
@@ -85,6 +76,12 @@ namespace MultiStrand
                     }
                 }
 
+                foreach (Genome genome in population)
+                {
+                    genome.Mutate(mutationRate);
+                }
+
+                population.Add(evaluatedPopulation[0].Item2);
             }
 
             stopwatch.Stop();
@@ -93,7 +90,7 @@ namespace MultiStrand
 
         }
 
-        private static Tuple<int, double, string> MultiStrandCLISetup()
+        private static Tuple<int, double, double, string> MultiStrandCLISetup()
         {
             string input;
             /*
@@ -102,7 +99,9 @@ namespace MultiStrand
             */
 
             int selectedPopsize = 1000;
-            double mutationRate = 0.01;
+            double selectedMutationRate = 0.01;
+            double selectedCrossoverRate = 1.0;
+
             string selectedTargetPhenotype = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, \n" +
                 "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\n" +
                 " Ut enim ad minim veniam, quis nostrud exercitation ullamco \n" +
@@ -116,15 +115,19 @@ namespace MultiStrand
             input = Console.ReadLine();
             selectedPopsize = input == "" ? selectedPopsize : Convert.ToInt32(input);
 
-            Console.Write("Enter desired mutation rate (default 0.01): ");
+            Console.Write("Enter desired mutation rate (default = 0.01): ");
             input = Console.ReadLine();
-            mutationRate = input == "" ? mutationRate : Convert.ToDouble(input);
+            selectedMutationRate = input == "" ? selectedMutationRate : Convert.ToDouble(input);
 
-            Console.Write("Enter target phenotype: ");
+            Console.Write("Enter desired crossover rate (default = 1.0): ");
+            input = Console.ReadLine();
+            selectedCrossoverRate = input == "" ? selectedCrossoverRate : Convert.ToDouble(input);
+
+            Console.Write("Enter target phenotype (default = Lorem ipsum...): ");
             input = Console.ReadLine();
             selectedTargetPhenotype = input == "" ? selectedTargetPhenotype : input;
 
-            return new Tuple<int, double, string>(selectedPopsize, mutationRate, selectedTargetPhenotype);
+            return new Tuple<int, double, double,string>(selectedPopsize, selectedMutationRate, selectedCrossoverRate, selectedTargetPhenotype);
         }
     }
 

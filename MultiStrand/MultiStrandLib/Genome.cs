@@ -8,12 +8,12 @@ namespace MultiStrandLib
         private int genomeLength;
         public string Genes { get => genes; set => genes = value; }
         public int GenomeLength { get => genomeLength; set => genomeLength = value; }
-
+        Random random;
         public Genome(int genomeLength)
         {
             this.genomeLength = genomeLength;
 
-            Random random = new Random();
+            random = new Random();
 
             genes = "";
 
@@ -32,6 +32,7 @@ namespace MultiStrandLib
         {
             this.genes = genes;
             this.genomeLength = this.genes.Length;
+            random = new Random();
         }
 
         public int Mutate(double mutationRate = 0.1)
@@ -40,7 +41,6 @@ namespace MultiStrandLib
              TODO: Get rid of this random generator. 
             It's overhead that serves nothing and leftover from prototype. 
              */
-            Random random = new Random();
             for (int i = 0; i < genomeLength; i++)
             {
                 if (random.NextDouble() <= mutationRate)
