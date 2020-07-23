@@ -19,6 +19,11 @@ namespace MultiStrandLib
 
             for (int i = 0; i < genomeLength; i++)
             {
+                /*
+                Range 8 - 128 is bit wider than needed.
+                But it includes all chars needed to replicate normal latin text,
+                while still not making it too easy for the algorithm.
+                 */
                 genes += Convert.ToChar(random.Next(8, 128));
             }
         }
@@ -31,6 +36,10 @@ namespace MultiStrandLib
 
         public int Mutate(double mutationRate = 0.1)
         {
+            /*
+             TODO: Get rid of this random generator. 
+            It's overhead that serves nothing and leftover from prototype. 
+             */
             Random random = new Random();
             for (int i = 0; i < genomeLength; i++)
             {
