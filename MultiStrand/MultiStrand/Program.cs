@@ -13,6 +13,7 @@ namespace MultiStrand
         {
             string targetPhenotype;
             int popSize;
+            long maxGenerations;
             long totalGenerationsPassed = 0;
             double bestFitness = 0.0;
             double mutationRate;
@@ -26,7 +27,11 @@ namespace MultiStrand
 
             List<Task<Tuple<double, Genome>>> taskList = new List<Task<Tuple<double, Genome>>>();
 
-            (popSize, mutationRate, crossoverRate, targetPhenotype) = MultiStrandCLISetup();
+            (popSize, 
+                maxGenerations, 
+                mutationRate, 
+                crossoverRate, 
+                targetPhenotype) = MultiStrandCLISetup();
 
             for (int i = 0; i < popSize; i++)
             {
@@ -39,8 +44,8 @@ namespace MultiStrand
 
             stopwatch.Start();
 
-            while (bestFitness != 1)
-            {              
+            while (bestFitness != 1 && maxGenerations <= totalGenerationsPassed)
+            {                   
                 foreach (Genome genome in population)
                 {
                     taskList.Add(
@@ -52,7 +57,8 @@ namespace MultiStrand
                     evaluatedPopulation.Add(taskList[i].Result);
                 }
 
-                evaluatedPopulation = evaluatedPopulation.OrderBy(genomeFitnessPair => genomeFitnessPair.Item1).ToList();
+                evaluatedPopulation = evaluatedPopulation.OrderBy(
+                    genomeFitnessPair => genomeFitnessPair.Item1).ToList();
 
                 //Clear lists 
                 population.Clear();
@@ -101,15 +107,16 @@ namespace MultiStrand
             Console.WriteLine("Over {0} generations.", totalGenerationsPassed);
         }
 
-        private static Tuple<int, double, double, string> MultiStrandCLISetup()
+        private static Tuple<int, long, double, double, string> MultiStrandCLISetup()
         {
             string input;
             /*
-               Default values for population size and target phenotype. 
-               The population size and target phenotype should be chosen with respect to your systems resources.
+               Default values for population size, maximum generations, mutation and crossover rate as well as target phenotype. 
+               The parameters should be chosen with respect to your systems resources.
             */
 
             int selectedPopsize = 1000;
+            long selectedMaxGenerations = -1;
             double selectedMutationRate = 0.01;
             double selectedCrossoverRate = 1.0;
 
@@ -138,8 +145,15 @@ namespace MultiStrand
             input = Console.ReadLine();
             selectedTargetPhenotype = input == "" ? selectedTargetPhenotype : input;
 
-            return new Tuple<int, double, double,string>(selectedPopsize, selectedMutationRate, selectedCrossoverRate, selectedTargetPhenotype);
+            Console.Write("Enter maximum number of generations (default = until fitness 1.0 reached): ");
+            input = Console.ReadLine();
+            selectedMaxGenerations = input == "" ? selectedMaxGenerations : Convert.ToInt64(input);
+
+            return new Tuple<int, long, double, double, string>(selectedPopsize, 
+                selectedMaxGenerations, 
+                selectedMutationRate, 
+                selectedCrossoverRate, 
+                selectedTargetPhenotype);
         }
     }
-
 }
