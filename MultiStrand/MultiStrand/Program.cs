@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using MultiStrandLib;
+using System.IO;
 
 namespace MultiStrand
 {
@@ -120,14 +121,11 @@ namespace MultiStrand
             double selectedMutationRate = 0.01;
             double selectedCrossoverRate = 1.0;
 
-            string selectedTargetPhenotype = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, \n" +
-                "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\n" +
-                " Ut enim ad minim veniam, quis nostrud exercitation ullamco \n" +
-                "laboris nisi ut aliquip ex ea commodo consequat.\n" +
-                " Duis aute irure dolor in reprehenderit in voluptate \n" +
-                "velit esse cillum dolore eu fugiat nulla pariatur. \n" +
-                "Excepteur sint occaecat cupidatat non proident, \n" +
-                "sunt in culpa qui officia deserunt mollit anim id est laborum.";
+            string selectedTargetPhenotype;
+            using (StreamReader reader = File.OpenText("../../../loremipsum.txt"))
+            {
+                selectedTargetPhenotype = reader.ReadToEnd();
+            }
 
             Console.Write("Enter desired population size (default 1000): ");
             input = Console.ReadLine();
@@ -149,7 +147,8 @@ namespace MultiStrand
             input = Console.ReadLine();
             selectedMaxGenerations = input == "" ? selectedMaxGenerations : Convert.ToInt64(input);
 
-            return new Tuple<int, long, double, double, string>(selectedPopsize, 
+            return new Tuple<int, long, double, double, string>(
+                selectedPopsize, 
                 selectedMaxGenerations, 
                 selectedMutationRate, 
                 selectedCrossoverRate, 
