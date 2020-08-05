@@ -73,7 +73,6 @@ namespace MultiStrandLib
                     genes = genes.Substring(0, i)
                         + Convert.ToChar(randomGenerator.Next(8, 128))
                         + genes.Substring(i + 1);
-                    break;
                 }
             }
 
